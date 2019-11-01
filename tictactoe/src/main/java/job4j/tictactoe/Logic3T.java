@@ -1,5 +1,7 @@
 package job4j.tictactoe;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Logic3T {
@@ -38,6 +40,9 @@ public class Logic3T {
     }
 
     public boolean hasGap() {
-        return true;
+        Optional<Figure3T> optFigure = Arrays.stream(this.table)
+                .flatMap(Arrays::stream)
+                .filter(figure3T -> !figure3T.hasMarkO() && !figure3T.hasMarkX()).findFirst();
+        return optFigure.isPresent();
     }
 }
