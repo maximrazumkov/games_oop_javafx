@@ -11,32 +11,45 @@ public class Logic3T {
         this.table = table;
     }
 
-    public boolean fillBy(Predicate<Figure3T> predicate, int startX, int startY, int deltaX, int deltaY) {
-        boolean result = true;
-        for (int index = 0; index != this.table.length; index++) {
-            Figure3T cell = this.table[startX][startY];
-            startX += deltaX;
-            startY += deltaY;
-            if (!predicate.test(cell)) {
-                result = false;
-                break;
+    public boolean fillBy(Predicate<Figure3T> predicate) {
+        boolean result = false;
+        int length = this.table.length;
+        for (int i = 0; i < length; ++i) {
+            Figure3T figure3T = table[i][i];
+            if (predicate.test(figure3T)) {
+                int y = 0;
+                int x = 0;
+                int diag = 0;
+                int backDiag = 0;
+                for (int j = 0; j < length; ++j) {
+                    if (predicate.test(this.table[i][j])) {
+                        ++x;
+                    }
+                    if (predicate.test(this.table[j][i])) {
+                        ++y;
+                    }
+                    if (predicate.test(this.table[j][j])) {
+                        ++diag;
+                    }
+                    if (predicate.test(this.table[length - 1 - j][j])) {
+                        ++backDiag;
+                    }
+                }
+                if (length == y || length == x || length == diag || length == backDiag) {
+                    result = true;
+                    break;
+                }
             }
         }
         return result;
     }
 
     public boolean isWinnerX() {
-        return this.fillBy(Figure3T::hasMarkX, 0, 0, 1, 0) ||
-                this.fillBy(Figure3T::hasMarkX, 0, 0, 0, 1) ||
-                this.fillBy(Figure3T::hasMarkX, 0,0, 1, 1) ||
-                this.fillBy(Figure3T::hasMarkX, this.table.length - 1 , 0, -1, 1);
+        return this.fillBy(Figure3T::hasMarkX);
     }
 
     public boolean isWinnerO() {
-        return this.fillBy(Figure3T::hasMarkO, 0, 0, 1, 0) ||
-                this.fillBy(Figure3T::hasMarkO, 0, 0, 0, 1) ||
-                this.fillBy(Figure3T::hasMarkO, 0,0, 1, 1) ||
-                this.fillBy(Figure3T::hasMarkO, this.table.length - 1, 0, -1, 1);
+        return this.fillBy(Figure3T::hasMarkO);
     }
 
     public boolean hasGap() {
